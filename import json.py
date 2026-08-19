@@ -1,13 +1,30 @@
 import json
+import os #operating system
 
+def addTask():
+    task = input("Enter the task you want to add: ")
 
-for id in range(1):
-    def addTask():
-        description = input("Enter a task: ")
-    def status():
-        status = input("Enter the status of the task: ")
-    def createdAt():
-        createdAt = input("Enter the creation date of the task: ")
-    def updatedAt():
-        updatedAt = input("Enter the last updated date of the task: ")
-    def 
+    if os.path.exists('tasks.json'): #checking if file exists
+        with open('tasks.json', 'r') as f:
+            try:
+                tasksList = json.load(f) #reading JSON file
+            except json.JSONDecodeError:
+                tasksList = []
+    else:
+        tasksList = []
+
+    nextID = max((t['id'] for t in tasksList), default=0) + 1
+
+    newTask = {
+        'id' : nextID,
+        'task': task,
+    }
+
+    tasksList.append(newTask)
+
+    with open('tasks.json', 'w') as f: #overriding old list with new updated list
+        json.dump(tasksList, f, indent=2)
+
+    print(f'Task "{task}" added successfully')
+
+addTask()    
